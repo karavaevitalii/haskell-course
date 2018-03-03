@@ -20,11 +20,10 @@ instance Ord Nat where
 
 instance Show Nat where
   show :: Nat -> String
-  show = show . natAsInt where
-    natAsInt :: Nat -> Int
-    natAsInt Z      = 0
-    natAsInt (S x)  = 1 + natAsInt x
-
+  show = show . fromNat where
+    fromNat :: Nat -> Int
+    fromNat Z      = 0
+    fromNat (S x)  = 1 + fromNat x
 
 instance Num Nat where
   (+), (-), (*) :: Nat -> Nat -> Nat
@@ -40,7 +39,7 @@ instance Num Nat where
 
   signum :: Nat -> Nat
   signum Z = Z
-  signum _ = S Z
+  signum _ = S Z  
 
   abs :: Nat -> Nat
   abs = id
@@ -49,4 +48,4 @@ instance Num Nat where
   fromInteger 0 = Z
   fromInteger x
     | x < 0     = error "Nat can not be negative"
-    | otherwise = S (fromInteger (x - 1))
+    | otherwise = S $ fromInteger (x - 1)

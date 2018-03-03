@@ -19,4 +19,6 @@ mergeSort xs = merge (mergeSort (left xs)) (mergeSort (right xs))
     merge :: Ord a => [a] -> [a] -> [a]
     merge [] ys         = ys
     merge ys []         = ys
-    merge l@(y:ys) r@(z:zs) = if y < z then y:merge ys r else z:merge zs l
+    merge l@(y:ys) r@(z:zs) = if y < z
+                            then y:merge ys r
+                            else z:merge zs l
