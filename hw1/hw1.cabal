@@ -18,7 +18,7 @@ tested-with:         GHC == 8.2.2
 
 library
   hs-source-dirs:      src
-  exposed-modules:     SimpleFunctions PatternMatching WeekDay Nat Tree
+  exposed-modules:     SimpleFunctions PatternMatching WeekDay Nat Tree Castles
   ghc-options:         -Wall
   build-depends:       base >= 4.9 && < 5
   default-language:    Haskell2010

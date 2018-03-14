@@ -4,10 +4,11 @@ module WeekDay
   , afterDays
   , isWeekend
   , daysToParty
+  , testWeekDay
   ) where
 
-data WeekDay
-  = Monday
+data WeekDay =
+    Monday
   | Tuesday
   | Wednesday
   | Thursday
@@ -32,3 +33,10 @@ daysToParty = count 0
     count :: Int -> WeekDay -> Int
     count acc Friday  = acc
     count acc day     = count (acc + 1) (nextDay day)
+
+testWeekDay :: Bool
+testWeekDay = nextDay Monday == Tuesday &&
+  nextDay Sunday == Monday &&
+  afterDays Monday 5 == Saturday &&
+  isWeekend Sunday &&
+  daysToParty Friday == 0
