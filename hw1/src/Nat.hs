@@ -23,8 +23,8 @@ instance Show Nat where
   show :: Nat -> String
   show = show . fromNat where
     fromNat :: Nat -> Int
-    fromNat Z      = 0
-    fromNat (S x)  = 1 + fromNat x
+    fromNat Z     = 0
+    fromNat (S x) = 1 + fromNat x
 
 instance Num Nat where
   (+), (-), (*) :: Nat -> Nat -> Nat
@@ -40,7 +40,7 @@ instance Num Nat where
 
   signum :: Nat -> Nat
   signum Z = Z
-  signum _ = S Z  
+  signum _ = S Z
 
   abs :: Nat -> Nat
   abs = id

@@ -12,10 +12,9 @@ module Castles
   , buildHouse
   , getNewLord
   , buildWalls
-  , testCastles
   ) where
 
-import Data.List.NonEmpty (NonEmpty (..), (<|))
+import           Data.List.NonEmpty (NonEmpty (..), (<|))
 
 newtype Person = Person
   { personName :: String }
@@ -41,14 +40,14 @@ newtype Castle = Castle
 data Walls = Walls deriving (Show)
 
 data Protection = Protection
-  { protectionCastle  :: Castle
-  , protectionWalls   :: Maybe Walls
+  { protectionCastle :: Castle
+  , protectionWalls  :: Maybe Walls
   } deriving (Show)
 
 data City = City
-  { cityProtection  :: Maybe Protection
-  , cityClub        :: Maybe Club
-  , cityHouses      :: NonEmpty House
+  { cityProtection :: Maybe Protection
+  , cityClub       :: Maybe Club
+  , cityHouses     :: NonEmpty House
   } deriving (Show)
 
 data NewLordError =

@@ -9,7 +9,7 @@ module SimpleFunctions
   , checkStringSum
   ) where
 
-import Data.List (sort)
+import           Data.List (sort)
 
 order3 :: Ord a => (a, a, a) -> (a, a, a)
 order3 (a, b, c) = (x, y, z)

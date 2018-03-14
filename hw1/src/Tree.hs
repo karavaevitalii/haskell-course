@@ -15,8 +15,8 @@ data Tree a =
     deriving (Show, Eq)
 
 isEmpty :: Tree a -> Bool
-isEmpty Leaf  = True
-isEmpty _     = False
+isEmpty Leaf = True
+isEmpty _    = False
 
 size :: Tree a -> Int
 size Leaf         = 0

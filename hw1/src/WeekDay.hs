@@ -19,7 +19,7 @@ data WeekDay =
 
 nextDay :: WeekDay -> WeekDay
 nextDay Sunday = Monday
-nextDay day = succ day
+nextDay day    = succ day
 
 afterDays :: WeekDay -> Int -> WeekDay
 afterDays day n = last $ take (n + 1) $ iterate nextDay day
@@ -31,8 +31,8 @@ daysToParty :: WeekDay -> Int
 daysToParty = count 0
   where
     count :: Int -> WeekDay -> Int
-    count acc Friday  = acc
-    count acc day     = count (acc + 1) (nextDay day)
+    count acc Friday = acc
+    count acc day    = count (acc + 1) (nextDay day)
 
 testWeekDay :: Bool
 testWeekDay = nextDay Monday == Tuesday &&

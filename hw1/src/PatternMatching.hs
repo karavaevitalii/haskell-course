@@ -5,7 +5,7 @@ module PatternMatching
   , testMergeSort
   ) where
 
-import Data.List (splitAt)
+import           Data.List (splitAt)
 
 removeAt :: Int -> [a] -> a
 removeAt idx l = head $ snd $ splitAt idx l
