@@ -2,7 +2,6 @@
 
 module Nat
   ( Nat(..)
-  , testNat
   ) where
 
 data Nat = Z | S Nat
@@ -51,5 +50,5 @@ instance Num Nat where
     | x < 0     = error "Nat can not be negative"
     | otherwise = S $ fromInteger (x - 1)
 
-testNat :: Bool
-testNat = fromInteger 10 + fromInteger 5 * fromInteger 2 - fromInteger 1 == fromInteger 19
+--testNat :: Bool
+--testNat = fromInteger 10 + fromInteger 5 * fromInteger 2 - fromInteger 1 == fromInteger 19

@@ -1,8 +1,6 @@
 module PatternMatching
   ( removeAt
   , mergeSort
-  , testRemoveAt
-  , testMergeSort
   ) where
 
 import           Data.List (splitAt)
@@ -25,8 +23,8 @@ mergeSort xs = merge (mergeSort (left xs)) (mergeSort (right xs))
                             then y:merge ys r
                             else z:merge zs l
 
-testRemoveAt :: Bool
-testRemoveAt = removeAt 0 [1,2,3] == 1 && removeAt 1 [1,2,3] == 2 && removeAt 2 [1,2,3] == 3
-
-testMergeSort :: Bool
-testMergeSort = mergeSort [10,9..1] == [1..10]
+--testRemoveAt :: Bool
+--testRemoveAt = removeAt 0 [1,2,3] == 1 && removeAt 1 [1,2,3] == 2 && removeAt 2 [1,2,3] == 3
+--
+--testMergeSort :: Bool
+--testMergeSort = mergeSort [10,9..1] == [1..10]

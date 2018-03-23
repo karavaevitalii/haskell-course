@@ -3,9 +3,7 @@
 module Folding
   ( Pair (..)
   , NonEmpty (..)
-  , testSplitOn
-  , testPair
-  , testNonEmpty
+  , splitOn
   ) where
 
 data Pair a = Pair a a
@@ -34,11 +32,11 @@ splitOn x = foldr f [[]]
       | otherwise = (item : y) : ys
     f _ [] = undefined
 
-testSplitOn :: Bool
-testSplitOn = splitOn '/' "path/to/file" == ["path", "to", "file"]
-
-testPair :: Bool
-testPair = foldr (++) [] (Pair [1] [2]) == [1,2]
-
-testNonEmpty :: Bool
-testNonEmpty = foldr (+) 5 (6 :| [1,2,3,4,5]) == 26
+--testSplitOn :: Bool
+--testSplitOn = splitOn '/' "path/to/file" == ["path", "to", "file"]
+--
+--testPair :: Bool
+--testPair = foldr (++) [] (Pair [1] [2]) == [1,2]
+--
+--testNonEmpty :: Bool
+--testNonEmpty = foldr (+) 5 (6 :| [1,2,3,4,5]) == 26

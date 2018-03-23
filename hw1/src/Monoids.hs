@@ -1,6 +1,5 @@
 module Monoids
   ( maybeConcat
-  , testMaybeConcat
   ) where
 
 import           Data.Semigroup (Semigroup (..))
@@ -11,12 +10,11 @@ maybeConcat = foldr impl []
     impl Nothing z     = z
     impl (Just list) z = list ++ z
 
-testMaybeConcat :: Bool
-testMaybeConcat = maybeConcat [Just [1,2,3], Nothing, Just [4,5]] == [1,2,3,4,5]
-
 data NonEmpty a =
   a :| [a]
 
 instance Semigroup (NonEmpty t) where
   (x :| xs) <> (y :| ys) = x :| (xs ++ [y] ++ ys)
 
+--testMaybeConcat :: Bool
+--testMaybeConcat = maybeConcat [Just [1,2,3], Nothing, Just [4,5]] == [1,2,3,4,5]

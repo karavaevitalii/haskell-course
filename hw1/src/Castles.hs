@@ -70,13 +70,13 @@ buildHouse (City prot club houses) family = City prot club (House family<|houses
 getNewLord :: City -> Person -> Either NewLordError City
 getNewLord (City Nothing _ _) _ = Left NoCastle
 getNewLord (City (Just (Protection (Castle (Just (Person _))) _)) _ _) _ = Left LordExists
-getNewLord (City (Just (Protection (Castle (Nothing)) walls)) club houses) lord
+getNewLord (City (Just (Protection (Castle Nothing) walls)) club houses) lord
   = Right (City (Just (Protection (Castle (Just lord)) walls)) club houses)
 
 buildWalls :: City -> Walls -> Either String City
-buildWalls city@(City (Just (Protection (Castle (lord)) Nothing)) club houses) walls
+buildWalls city@(City (Just (Protection (Castle lord) Nothing)) club houses) walls
   | countCitizens city > 9 =
-    (Right (City (Just (Protection (Castle (lord)) (Just walls))) club houses))
+    Right (City (Just (Protection (Castle lord) (Just walls))) club houses)
   | otherwise = Left "Not enough citizens"
     where
       countCitizens :: City -> Int

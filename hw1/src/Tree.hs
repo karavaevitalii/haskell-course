@@ -6,7 +6,6 @@ module Tree
   , insert
   , fromList
   , erase
-  , testTree
   ) where
 
 data Tree a =
@@ -44,7 +43,7 @@ insert (Node keys left right) target
 
 fromList :: Ord a => [a] -> Tree a
 fromList []     = Leaf
-fromList (x:xs) = Node ([x] ++ filter (==x) xs)
+fromList (x:xs) = Node (x : filter (==x) xs)
   (fromList $ filter (<x) xs)
   (fromList $ filter (>x) xs)
 
@@ -60,10 +59,10 @@ erase (Node keys left right) target
                             key         = take 1 keys
                             targetList  = [target]
 
-testTree :: Bool
-testTree = let t = fromList [1,2,3,4,5,6] in
-  find t 4 == Just (Node [4] Leaf (Node [5] Leaf (Node [6] Leaf Leaf))) &&
-  find t 7 == Nothing &&
-  insert t 7 == Node [1] Leaf (Node [2] Leaf
-    (Node [3] Leaf (Node [4] Leaf (Node [5] Leaf (Node [6] Leaf (Node [7] Leaf Leaf)))))) &&
-  size t == 6
+--testTree :: Bool
+--testTree = let t = fromList [1,2,3,4,5,6] in
+--  find t 4 == Just (Node [4] Leaf (Node [5] Leaf (Node [6] Leaf Leaf))) &&
+--  find t 7 == Nothing &&
+--  insert t 7 == Node [1] Leaf (Node [2] Leaf
+--    (Node [3] Leaf (Node [4] Leaf (Node [5] Leaf (Node [6] Leaf (Node [7] Leaf Leaf)))))) &&
+--  size t == 6
