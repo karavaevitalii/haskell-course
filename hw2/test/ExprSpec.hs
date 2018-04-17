@@ -1,10 +1,10 @@
 module ExprSpec where
 
-import MonadicCalc
-import Test.Hspec
+import           MonadicCalc
+import           Test.Hspec
 
 spec :: Spec
-spec = do 
+spec = do
   it "expression" $ do
     eval (Const 42) `shouldBe` Right 42
     eval (Add (Const 5) (Mul (Const 2) (Const 3))) `shouldBe` Right (5 + 2 * 3)

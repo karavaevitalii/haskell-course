@@ -18,7 +18,7 @@ tested-with:         GHC == 8.0.1
 
 library
   hs-source-dirs:      src
-  exposed-modules:     MonadicCalc
+  exposed-modules:     MonadicCalc, TypesHierarchy, ParserCombinators, Parsers
   ghc-options:         -Wall
   build-depends:       base >= 4.9 && < 5
   default-language:    Haskell2010
@@ -35,5 +35,5 @@ test-suite spec
   main-is:             Spec.hs
   hs-source-dirs:      test
   build-depends:       base >= 4.9 && < 5, hw2, hspec
-  other-modules:       ExprSpec
+  other-modules:       ExprSpec, StringSumSpec, ParserSpec
   default-language:    Haskell2010
