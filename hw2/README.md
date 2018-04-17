@@ -3,8 +3,8 @@
 [![MIT license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/username/TemplateHW/blob/master/hw2/LICENSE)
 
 ## Monad laws proof 
-1. Left Identity: retrun a >>= f = f a__
-* return a >>= f 
+1. Left Identity: retrun a >>= f = f a
+* return a >>= f__
   = Optional (Just (Just a)) >>= f -- return
   = f a -- bind-Optional(Just (Just a))
 2. Right Identity: m >>= return = m
