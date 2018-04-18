@@ -34,6 +34,12 @@ test-suite spec
   type:                exitcode-stdio-1.0
   main-is:             Spec.hs
   hs-source-dirs:      test
-  build-depends:       base >= 4.9 && < 5, hw2, hspec
-  other-modules:       ExprSpec, StringSumSpec, ParserSpec
+  build-depends:       base >= 4.9 && < 5
+                       , hw2
+                       , hspec
+                       , hedgehog
+                       , tasty
+                       , tasty-hspec
+                       , tasty-hedgehog
+  other-modules:       ExprSpec, StringSumSpec, ParserSpec, Property
   default-language:    Haskell2010

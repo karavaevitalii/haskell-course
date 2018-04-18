@@ -33,15 +33,19 @@ spec = do
   it "parseCBS" $ do
     runParser parseCBS "" `shouldSatisfy` isJust
     runParser parseCBS "()" `shouldSatisfy` isJust
-    runParser parseCBS "(())()" `shouldSatisfy` isJust
+    runParser parseCBS " (( ))() " `shouldSatisfy` isJust
     runParser parseCBS ")" `shouldSatisfy` isNothing
     runParser parseCBS "())" `shouldSatisfy` isNothing
     runParser parseCBS "(())" `shouldBe` Just("(())", "")
 
   it "parseInteger" $ do
-    runParser parseInteger "-42" `shouldSatisfy` isJust
-    runParser parseInteger "42" `shouldSatisfy` isJust
+    runParser parseInteger " -42" `shouldSatisfy` isJust
+    runParser parseInteger "42 " `shouldSatisfy` isJust
     runParser parseInteger "+42" `shouldSatisfy` isJust
     runParser parseInteger "cc" `shouldSatisfy` isNothing
     runParser parseInteger "-v" `shouldSatisfy` isNothing 
     runParser parseInteger "-42" `shouldBe` Just (-42, "")
+  
+  it "parseList" $ do
+    runParser parseList "2, 1,+10  , 3,5,-7, 2" `shouldBe` Just ([[1, 10], [5, -7, 2]], "")
+    runParser parseList "2, 1" `shouldBe` Just ([], "2, 1")
