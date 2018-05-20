@@ -1,3 +1,5 @@
+{-# LANGUAGE OverloadedStrings #-}
+
 module Parser
     ( parseProgram
     , ParsingException (..)
@@ -7,8 +9,9 @@ import           Expression                 (Expr (..))
 import           Statement                  (Statement (..))
 
 import           Text.Megaparsec
-import           Text.Megaparsec.Char
-import qualified Text.Megaparsec.Char.Lexer as L
+import           Text.Megaparsec.Byte       (alphaNumChar, char, eol,
+                                             letterChar, string)
+import qualified Text.Megaparsec.Byte.Lexer as L
 import           Text.Megaparsec.Expr
 
 import           Control.Applicative        (empty)
@@ -16,25 +19,28 @@ import           Control.Monad.Catch        (Exception, MonadThrow, throwM)
 
 import           Data.Void
 
-type Parser = Parsec Void String
+import qualified Data.ByteString            as ByteStr
+import qualified Data.ByteString.Internal   as ByteStr (c2w)
+import qualified Data.ByteString.UTF8       as ByteStr8
 
-newtype ParsingException = ParsingException (ParseError (Token String) Void)
+type Str = ByteStr8.ByteString
+type Parser = Parsec Void Str
 
+newtype ParsingException = ParsingException (ParseError (Token Str) Void)
 instance Show ParsingException where
     show (ParsingException e) = parseErrorPretty e
-
 instance Exception ParsingException
 
 space1 :: Parser ()
-space1 = skipSome $ char ' '
+space1 = skipSome (char (ByteStr.c2w ' '))
 
 sc :: Parser ()
-sc = L.space Parser.space1 empty empty
+sc = L.space space1 empty empty
 
 lexeme :: Parser a -> Parser a
 lexeme = L.lexeme sc
 
-symbol :: String -> Parser String
+symbol :: Str -> Parser Str
 symbol = L.symbol sc
 
 parens :: Parser a -> Parser a
@@ -43,22 +49,24 @@ parens = between (symbol "(") (symbol ")")
 integer :: Parser Int
 integer = lexeme L.decimal
 
-rword :: String -> Parser ()
-rword w = (lexeme . try) (string w *> notFollowedBy alphaNumChar)
+reservedWord :: Str -> Parser ()
+reservedWord w = lexeme (string w *> notFollowedBy alphaNumChar)
 
-identifier :: Parser String
-identifier = (lexeme . try) (p >>= check)
+identifier :: Parser Str
+identifier = (lexeme . try) (pack >>= validate)
   where
-    p       = (:) <$> letterChar <*> many alphaNumChar
-    check x = if x `elem` rws
-                then fail $ "keyword " ++ show x ++ " cannot be an identifier"
-                else return x
-    rws = ["let", "mut"]
+    pack       = ByteStr.pack <$> ((:) <$> letterChar <*> many alphaNumChar)
+    validate x = if x `elem` reserved
+                 then fail $ "keyword " ++ show x ++ " cannot be an identifier"
+                 else return x
+    reserved :: [Str]
+    reserved = ["let", "mut", "for"]
 
 termParser :: Parser Expr
-termParser = (Let <$> (symbol "(" *> rword "let" *> identifier <* symbol "=")
-    <*> (exprParser <* symbol "in" ) <*> (exprParser <* symbol ")"))
-    <|> Var <$> identifier
+termParser =
+    (Let <$> (symbol "(" *> reservedWord "let" *> (ByteStr8.toString <$> identifier) <* symbol "=")
+        <*> (exprParser <* symbol "in" ) <*> (exprParser <* symbol ")"))
+    <|> Var <$> (ByteStr8.toString <$> identifier)
     <|> Lit <$> integer
     <|> parens exprParser
 
@@ -73,14 +81,24 @@ exprParser = makeExprParser termParser operators
 
 stmtParser :: Parser Statement
 stmtParser = sc *> (
-    Def <$> (rword "mut" *> identifier <* symbol "=") <*> exprParser
-    <|> Assignement <$> (identifier <* symbol "=") <*> exprParser
+    Def <$> (reservedWord "mut" *> (ByteStr8.toString <$> identifier) <* symbol "=") <*> exprParser
+    <|> Assignement <$> ((ByteStr8.toString <$> identifier) <* symbol "=") <*> exprParser
     <|> Print <$> (symbol "<" *> exprParser)
-    <|> Read <$> (symbol ">" *> identifier)
+    <|> Read <$> (symbol ">" *> (ByteStr8.toString <$> identifier))
+    <|> do
+        _ <- reservedWord "for" *> symbol "("
+        ini <- exprParser
+        _ <- reservedWord "to"
+        end <- exprParser
+        _ <- symbol ")" *> symbol "{" *> eol
+        body <- stmtsParser
+        _ <- symbol "}"
+        return $ Loop ini end body
     )
 
 stmtsParser :: Parser [Statement]
 stmtsParser = sc *> many (stmtParser <* eol)
 
 parseProgram :: (MonadThrow m) => String -> String -> m [Statement]
-parseProgram name s = either (throwM . ParsingException) return (parse stmtsParser name s)
+parseProgram name input =
+    either (throwM . ParsingException) return (parse stmtsParser name (ByteStr8.fromString input))

@@ -9,7 +9,8 @@ module Expression
     ) where
 
 import           Control.Monad.Catch  (Exception, MonadThrow, throwM)
-import           Control.Monad.Reader (MonadReader, asks, liftM2, local, runReaderT)
+import           Control.Monad.Reader (MonadReader, asks, liftM2, local,
+                                       runReaderT)
 import qualified Data.Map             as M
 
 data Expr

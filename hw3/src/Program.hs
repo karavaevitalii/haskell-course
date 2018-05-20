@@ -9,6 +9,7 @@ import           Expression          (ExprMap, eval)
 import           Parser              (parseProgram)
 import           Statement           (Statement (..), StatementError (..))
 
+import           Control.Monad       (replicateM_)
 import           Control.Monad.Catch (MonadCatch, throwM)
 import           Control.Monad.State (MonadIO, MonadState, forM_, get, liftIO,
                                       modify, runStateT)
@@ -37,20 +38,21 @@ printS val = liftIO $ print val
 
 execute :: (MonadState ExprMap m, MonadCatch m, MonadIO m) => [Statement] -> m ()
 execute stmts = forM_ stmts $ \stmt -> do
-    val <- getVal stmt
+    vars <- get
+    val  <- case stmt of
+        (Def _ e)         -> eval e vars
+        (Assignement _ e) -> eval e vars
+        (Read _)          -> read <$> liftIO getLine
+        (Print e)         -> eval e vars
+        (Loop e _ _)      -> eval e vars
     case stmt of
         Def var _         -> defS var val
         Assignement var _ -> assignS var val
         Read var          -> readS var val
         Print _           -> printS val
-  where
-    getVal stmt = do
-        vars <- get
-        case stmt of
-            (Def _ e)         -> eval e vars
-            (Assignement _ e) -> eval e vars
-            (Read _)          -> read <$> liftIO getLine
-            (Print e)         -> eval e vars
+        Loop _ var body   -> do
+            to <- eval var vars
+            replicateM_ (to - val) (execute body)
 
 runStmts :: [Statement] -> IO ()
 runStmts stmts = do

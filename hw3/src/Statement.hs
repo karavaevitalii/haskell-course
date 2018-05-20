@@ -12,6 +12,7 @@ data Statement
     | Assignement String Expr
     | Print Expr
     | Read String
+    | Loop Expr Expr [Statement]
     deriving Show
 
 data StatementError

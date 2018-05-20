@@ -5,8 +5,13 @@ module PatternMatching
 
 import           Data.List (splitAt)
 
-removeAt :: Int -> [a] -> a
-removeAt idx l = head $ snd $ splitAt idx l
+removeAt :: Int -> [a] -> (Maybe a, [a])
+removeAt idx lst
+    | idx < 0 = (Nothing, lst)
+    | otherwise = let (before, r) = splitAt idx lst in
+        case r of
+        []        -> (Nothing, lst)
+        (x:after) -> (Just x, before ++ after)
 
 mergeSort :: Ord a => [a] -> [a]
 mergeSort [] = []
@@ -23,8 +28,3 @@ mergeSort xs = merge (mergeSort (left xs)) (mergeSort (right xs))
                             then y:merge ys r
                             else z:merge zs l
 
---testRemoveAt :: Bool
---testRemoveAt = removeAt 0 [1,2,3] == 1 && removeAt 1 [1,2,3] == 2 && removeAt 2 [1,2,3] == 3
---
---testMergeSort :: Bool
---testMergeSort = mergeSort [10,9..1] == [1..10]
